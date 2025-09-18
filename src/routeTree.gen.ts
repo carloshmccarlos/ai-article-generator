@@ -9,8 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as ArticleGeneratorRouteRouteImport } from "./routes/article-generator/route";
 import { Route as IndexRouteImport } from "./routes/index";
 
+const ArticleGeneratorRouteRoute = ArticleGeneratorRouteRouteImport.update({
+  id: "/article-generator",
+  path: "/article-generator",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -19,28 +25,39 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
+  "/article-generator": typeof ArticleGeneratorRouteRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
+  "/article-generator": typeof ArticleGeneratorRouteRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
+  "/article-generator": typeof ArticleGeneratorRouteRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
+  fullPaths: "/" | "/article-generator";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
+  to: "/" | "/article-generator";
+  id: "__root__" | "/" | "/article-generator";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  ArticleGeneratorRouteRoute: typeof ArticleGeneratorRouteRoute;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/article-generator": {
+      id: "/article-generator";
+      path: "/article-generator";
+      fullPath: "/article-generator";
+      preLoaderRoute: typeof ArticleGeneratorRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/": {
       id: "/";
       path: "/";
@@ -53,6 +70,7 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArticleGeneratorRouteRoute: ArticleGeneratorRouteRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

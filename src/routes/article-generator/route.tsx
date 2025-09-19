@@ -3,21 +3,23 @@ import { Wand2 } from "lucide-react";
 import { useState } from "react";
 import { ArticleForm } from "~/components/article-generator/ArticleForm";
 import { ArticlePreview } from "~/components/article-generator/ArticlePreview";
-import type { FormData } from "~/components/article-generator/types";
+
 import { Button } from "~/components/ui/button";
+import type { ArticleFormData } from "~/validation/articleSchema";
 
 export const Route = createFileRoute("/article-generator")({
 	component: ArticleGenerator,
 });
 
 function ArticleGenerator() {
-	const [formData, setFormData] = useState<FormData>({
-		category: "",
+	const [formData, setFormData] = useState<ArticleFormData>({
+		categoryName: "",
 		subcategory: "",
 		level: "",
+		wordsCountRange: "",
 		format: "",
 		topic: "",
-		keywords: "",
+		offeredWords: "",
 		additionalNotes: "",
 	});
 
@@ -46,9 +48,9 @@ function ArticleGenerator() {
 		} catch {}
 	};
 
-	const handleInputChange = (field: keyof FormData, value: string) => {
+	const handleInputChange = (field: keyof ArticleFormData, value: string) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
-		if (field === "category") {
+		if (field === "categoryName") {
 			setFormData((prev) => ({ ...prev, subcategory: "" }));
 		}
 	};
@@ -64,11 +66,11 @@ function ArticleGenerator() {
 
 ## Introduction
 
-This is a ${formData.level.toLowerCase()} level article about **${formData.topic}** in the ${formData.category} category.
+This is a ${formData.level.toLowerCase()} level article about **${formData.topic}** in the ${formData.categoryName} category.
 
 ### Key Points
 
-- **Keywords**: ${formData.keywords}
+- **Keywords**: ${formData.offeredWords}
 - **Format**: ${formData.format}
 - **Level**: ${formData.level}
 
@@ -86,7 +88,7 @@ Integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit a
 
 ## Conclusion
 
-In conclusion, this article demonstrates the integration of user-provided keywords: **${formData.keywords}** into a well-structured ${formData.format.toLowerCase()}.
+In conclusion, this article demonstrates the integration of user-provided keywords: **${formData.offeredWords}** into a well-structured ${formData.format.toLowerCase()}.
 
 ---
 
@@ -142,7 +144,7 @@ In conclusion, this article demonstrates the integration of user-provided keywor
 										onClick={backToForm}
 										className="bg-blue-600 hover:bg-blue-700"
 									>
-										Back to Form
+										Back to Configuration
 									</Button>
 								</div>
 							</div>

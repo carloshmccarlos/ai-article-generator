@@ -14,9 +14,10 @@ export const articles = pgTable("articles", {
 	categoryName: varchar("category_name", { length: 100 }).notNull(),
 	subcategory: varchar("subcategory", { length: 100 }).notNull(),
 	level: varchar("level", { length: 50 }).notNull(),
-	wordCountLabel: varchar("word_count_label", { length: 50 }).notNull(),
-	topic: text("topic").notNull(),
-	offeredWords: jsonb("offered_words").$type<string[]>().notNull(),
+	format: varchar("format", { length: 50 }).notNull(),
+	wordsCountRange: varchar("word_count", { length: 50 }).notNull(),
+	topic: text("topic"),
+	offeredWords: jsonb("offered_words").$type<string[]>(),
 	content: text("content").notNull(),
 
 	createdAt: timestamp("created_at").defaultNow().notNull(),

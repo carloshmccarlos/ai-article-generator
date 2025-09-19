@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { BookText, PenSquare, Sparkles, Tags } from "lucide-react";
 import { useId } from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -37,102 +37,142 @@ export function ArticleForm({
 	// Category selection is handled within CategorySelect component
 
 	return (
-		<Card className="h-fit">
-			<CardHeader>
-				<CardTitle className="flex items-center gap-2">
+		<Card className="h-fit border-2 border-blue-100/80 shadow-2xl bg-gradient-to-br from-white via-blue-50/30 to-white backdrop-blur-md">
+			<CardHeader className="bg-gradient-to-r from-blue-600/5 to-blue-500/10 border-b border-blue-100/50">
+				<CardTitle className="flex items-center gap-3 text-slate-800">
+					<div className="p-2 bg-blue-600 rounded-lg shadow-md">
+						<Sparkles className="w-5 h-5 text-white" />
+					</div>
 					Article Configuration
 				</CardTitle>
+				<p className="text-sm text-blue-600/80 mt-2 font-medium">
+					Set your preferences and provide a topic and keywords to get a high‑quality AI article.
+				</p>
 			</CardHeader>
-			<CardContent className="space-y-6">
-				{/* Category */}
-				<CategorySelect
-					categories={categories}
-					category={formData.category}
-					subcategory={formData.subcategory}
-					onChangeCategory={(v: string) => onChange("category", v)}
-					onChangeSubcategory={(v: string) => onChange("subcategory", v)}
-				/>
+			<CardContent className="space-y-8 bg-white/60">
+				{/* Section 1: Core Settings */}
+				<div className="space-y-6">
+					<div className="flex items-center gap-2">
+						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
+						<h3 className="text-sm font-semibold text-blue-700">Core Settings</h3>
+					</div>
+					<CategorySelect
+						categories={categories}
+						category={formData.category}
+						subcategory={formData.subcategory}
+						onChangeCategory={(v: string) => onChange("category", v)}
+						onChangeSubcategory={(v: string) => onChange("subcategory", v)}
+					/>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<LevelSelect
+							levels={levels}
+							value={formData.level}
+							onChange={(v) => onChange("level", v)}
+						/>
+						<div>
+							<Label htmlFor="format" className="text-slate-700">Article Format</Label>
+							<Select
+								value={formData.format}
+								onValueChange={(v) => onChange("format", v)}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Select article format" />
+								</SelectTrigger>
+								<SelectContent>
+									{articleFormats.map((format) => (
+										<SelectItem key={format.name} value={format.name}>
+											{format.name}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+					</div>
+				</div>
 
-				{/* Subcategory handled within CategorySelect via submenu */}
+				<div className="border-t border-blue-200/60 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent h-px" />
 
-				{/* Level */}
-				<LevelSelect
-					levels={levels}
-					value={formData.level}
-					onChange={(v) => onChange("level", v)}
-				/>
+				{/* Section 2: Content Details */}
+				<div className="space-y-6">
+					<div className="flex items-center gap-2">
+						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
+						<h3 className="text-sm font-semibold text-blue-700">Content Details</h3>
+					</div>
+					<div className="bg-white/80 p-4 rounded-xl border border-blue-100/60 shadow-sm">
+						<Label htmlFor={topicId} className="text-blue-800 font-medium">Article Topic <span className="text-red-500">*</span></Label>
+						<div className="relative mt-2">
+							<BookText className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
+							<Input
+								id={topicId}
+								placeholder="e.g. Modern React Patterns in 2025"
+								value={formData.topic}
+								onChange={(e) => onChange("topic", e.target.value)}
+								className="pl-9 border-blue-200/60 focus:border-blue-400 focus:ring-blue-400/20 bg-white/95"
+							/>
+						</div>
+						<p className="mt-2 text-xs text-blue-600/70">A clear topic helps the AI produce focused, relevant content.</p>
+					</div>
+					<div className="bg-white/95 p-4 rounded-xl border border-blue-100/60 shadow-md">
+						<Label htmlFor={keywordsId} className="text-blue-800 font-medium">Your Keywords <span className="text-red-500">*</span></Label>
+						<div className="relative mt-2">
+							<Tags className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
+							<Input
+								id={keywordsId}
+								placeholder="seo, performance, react, testing"
+								value={formData.keywords}
+								onChange={(e) => onChange("keywords", e.target.value)}
+								className="pl-9 border-blue-200/60 focus:border-blue-400 focus:ring-blue-400/20 bg-white/95"
+							/>
+						</div>
+						<p className="mt-2 text-xs text-blue-600/70">Separate keywords with commas. These guide the article's direction.</p>
+					</div>
+				</div>
 
-				{/* Format */}
-				<div>
-					<Label htmlFor="format">Article Format</Label>
-					<Select
-						value={formData.format}
-						onValueChange={(v) => onChange("format", v)}
+				<div className="border-t border-blue-200/60 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent h-px" />
+
+				{/* Section 3: Fine-Tuning */}
+				<div className="space-y-6">
+					<div className="flex items-center gap-2">
+						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
+						<h3 className="text-sm font-semibold text-blue-700">Fine-Tuning (Optional)</h3>
+					</div>
+					<div className="bg-white/95 p-4 rounded-xl border border-blue-100/60 shadow-md">
+						<Label htmlFor={notesId} className="text-blue-800 font-medium">Additional Notes</Label>
+						<div className="relative mt-2">
+							<PenSquare className="absolute left-3 top-3 w-4 h-4 text-blue-400" />
+							<Textarea
+								id={notesId}
+								placeholder="Tone, length, audience, references, style…"
+								value={formData.additionalNotes}
+								onChange={(e) => onChange("additionalNotes", e.target.value)}
+								rows={3}
+								className="pl-9 border-blue-200/60 focus:border-blue-400 focus:ring-blue-400/20 bg-white/95 resize-none"
+							/>
+						</div>
+						<p className="mt-2 text-xs text-blue-600/70">Add any constraints or context you'd like the model to follow.</p>
+					</div>
+				</div>
+
+				<div className="pt-4">
+					<Button
+						onClick={onGenerate}
+						disabled={!formData.topic || !formData.keywords || isGenerating}
+						className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 hover:from-blue-700 hover:via-blue-800 hover:to-blue-900 shadow-xl border border-blue-500/20 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+						size="lg"
 					>
-						<SelectTrigger>
-							<SelectValue placeholder="Select article format" />
-						</SelectTrigger>
-						<SelectContent>
-							{articleFormats.map((format) => (
-								<SelectItem key={format.name} value={format.name}>
-									{format.name}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+						{isGenerating ? (
+							<>
+								<Sparkles className="w-5 h-5 mr-3 animate-spin text-white" /> 
+								<span className="font-semibold">Generating...</span>
+							</>
+						) : (
+							<>
+								<Sparkles className="w-5 h-5 mr-3 text-white" /> 
+								<span className="font-semibold">Generate Article</span>
+							</>
+						)}
+					</Button>
 				</div>
-
-				{/* Topic */}
-				<div>
-					<Label htmlFor={topicId}>Article Topic</Label>
-					<Input
-						id={topicId}
-						placeholder="Enter your article topic"
-						value={formData.topic}
-						onChange={(e) => onChange("topic", e.target.value)}
-					/>
-				</div>
-
-				{/* Keywords */}
-				<div>
-					<Label htmlFor={keywordsId}>Your Keywords</Label>
-					<Input
-						id={keywordsId}
-						placeholder="Enter keywords separated by commas"
-						value={formData.keywords}
-						onChange={(e) => onChange("keywords", e.target.value)}
-					/>
-				</div>
-
-				{/* Notes */}
-				<div>
-					<Label htmlFor={notesId}>Additional Notes</Label>
-					<Textarea
-						id={notesId}
-						placeholder="Any specific requirements or style preferences"
-						value={formData.additionalNotes}
-						onChange={(e) => onChange("additionalNotes", e.target.value)}
-						rows={3}
-					/>
-				</div>
-
-				{/* Generate */}
-				<Button
-					onClick={onGenerate}
-					disabled={!formData.topic || !formData.keywords || isGenerating}
-					className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-					size="lg"
-				>
-					{isGenerating ? (
-						<>
-							<Sparkles className="w-4 h-4 mr-2 animate-spin" /> Generating...
-						</>
-					) : (
-						<>
-							<Sparkles className="w-4 h-4 mr-2" /> Generate Article
-						</>
-					)}
-				</Button>
 			</CardContent>
 		</Card>
 	);

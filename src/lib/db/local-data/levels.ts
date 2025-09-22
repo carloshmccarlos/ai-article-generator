@@ -29,9 +29,4 @@ export const levels: Level[] = [
 			"For readers with near-native or professional fluency. Includes sophisticated language, long and complex sentences, and highly specialized or technical content. Suitable for research papers, whitepapers, and professional publications. Articles demonstrate deep analysis, critical thinking, and advanced argumentation.",
 		cefr: "C2",
 	},
-	{
-		name: "Creative",
-		description:
-			"Focuses on imaginative, narrative, or artistic writing. May vary in sentence length and complexity depending on style. Suitable for storytelling, poetry, fiction, and other creative works. Articles emphasize expression, worldbuilding, character development, and engaging the reader emotionally.",
-	},
 ];

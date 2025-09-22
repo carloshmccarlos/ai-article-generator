@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 export function ArticlePreview({ content }: { content: string }) {
 	return (
-		<Card className="h-fit">
+		<Card className="rounded-none h-fit">
 			<CardHeader>
 				<CardTitle>Generated Article</CardTitle>
 			</CardHeader>

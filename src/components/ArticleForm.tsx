@@ -1,16 +1,10 @@
 import { BookText, PenSquare, Sparkles, Tags } from "lucide-react";
 import { useId } from "react";
+import { CommonSelect, type SelectOption } from "~/components/CommonSelect";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 import { articleFormats } from "~/lib/db/local-data/article-formats";
 import { categories } from "~/lib/db/local-data/categories";
@@ -18,7 +12,6 @@ import { levels } from "~/lib/db/local-data/levels";
 import { wordsCountRange } from "~/lib/db/local-data/wordsRange";
 import type { ArticleFormData } from "~/validation/articleSchema";
 import { CategorySelect } from "./CategorySelect";
-import { LevelSelect } from "./LevelSelect";
 
 export function ArticleForm({
 	formData,
@@ -26,8 +19,6 @@ export function ArticleForm({
 	onGenerate,
 	isGenerating,
 }: {
-
-
 	formData: ArticleFormData;
 	onChange: (field: keyof ArticleFormData, value: string) => void;
 	onGenerate: () => void;
@@ -40,8 +31,8 @@ export function ArticleForm({
 	// Category selection is handled within CategorySelect component
 
 	return (
-		<Card className="h-fit border-2 border-blue-100/80 shadow-2xl bg-gradient-to-br from-white via-blue-50/30 to-white backdrop-blur-md">
-			<CardHeader className="bg-gradient-to-r from-blue-600/5 to-blue-500/10 border-b border-blue-100/50">
+		<Card className="rounded-none flex flex-col gap-4 h-fit  shadow-2xl  backdrop-blur-md">
+			<CardHeader className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 border-b border-blue-100/50">
 				<CardTitle className="flex items-center gap-3 text-slate-800">
 					<div className="p-2 bg-blue-600 rounded-lg shadow-md">
 						<Sparkles className="w-5 h-5 text-white" />
@@ -53,10 +44,10 @@ export function ArticleForm({
 					high‑quality AI article.
 				</p>
 			</CardHeader>
-			<CardContent className="space-y-8 bg-white/60">
+			<CardContent className=" space-y-8 bg-white/60">
 				{/* Section 1: Core Settings */}
 				<div className="space-y-6">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 ">
 						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
 						<h3 className="text-sm font-semibold text-blue-700">
 							Core Settings
@@ -70,65 +61,55 @@ export function ArticleForm({
 						onChangeSubcategory={(v: string) => onChange("subcategory", v)}
 					/>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-						<LevelSelect
-							levels={levels}
+						<CommonSelect
+							label="Reading Level"
 							value={formData.level}
-							onChange={(v) => onChange("level", v)}
+							onChange={(value: string) => onChange("level", value)}
+							options={levels.map((level) => ({
+								value: level.name,
+								label: level.name,
+								description: level.description,
+								metadata: level.cefr ? { cefr: level.cefr } : undefined,
+							}))}
+							placeholder="Select reading level"
 						/>
 
-						<div>
-							<Label htmlFor="format" className="text-slate-700">
-								Article Format
-							</Label>
-							<Select
-								value={formData.format}
-								onValueChange={(v) => onChange("format", v)}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Select article format" />
-								</SelectTrigger>
-								<SelectContent>
-									{articleFormats.map((format) => (
-										<SelectItem key={format.name} value={format.name}>
-											{format.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<p className="mt-1 text-xs text-slate-500">Choose the structure that best fits your content goals.</p>
-						</div>
+						<CommonSelect
+							label="Article Format"
+							value={formData.format}
+							onChange={(value: string) => onChange("format", value)}
+							options={articleFormats.map((format) => ({
+								value: format.name,
+								label: format.name,
+								description: format.description,
+								metadata: {
+									structure: format.structure,
+									audience: format.audience,
+								},
+							}))}
+							placeholder="Select article format"
+						/>
 
-						<div>
-							<Label htmlFor="wordsCount" className="text-slate-700">
-								Words Count
-							</Label>
-							<Select
-								value={formData.wordsCountRange}
-								onValueChange={(v) => onChange("wordsCountRange", v)}
-							>
-								<SelectTrigger id="wordsCount">
-									<SelectValue placeholder="Select words count" />
-								</SelectTrigger>
-								<SelectContent>
-									{Object.entries(wordsCountRange).map(([key, range]) => {
-										const label = key.replace(/([A-Z])/g, " $1").replace(/^\w/, (c) => c.toUpperCase());
-										return (
-											<SelectItem key={key} value={key} className="group">
-												<div className="flex items-center justify-between w-full">
-													<span>{label}</span>
-													<span className="ml-3 text-xs text-slate-500 opacity-0 group-data-[highlighted]:opacity-100 transition-opacity">
-														min: {range.min}, max: {range.max}
-													</span>
-												</div>
-											</SelectItem>
-										);
-									})}
-								</SelectContent>
-							</Select>
-							<p className="mt-1 text-xs text-slate-500">Hover an option to see its words range.</p>
-						</div>
+						<CommonSelect
+							label="Words Count"
+							value={formData.wordsCountRange}
+							onChange={(value: string) => onChange("wordsCountRange", value)}
+							options={Object.entries(wordsCountRange).map(([key, range]) => {
+								const label = key
+									.replace(/([A-Z])/g, " $1")
+									.replace(/^\w/, (c) => c.toUpperCase());
+								return {
+									value: key,
+									label,
+									metadata: {
+										min: range.min,
+										max: range.max,
+									},
+								};
+							})}
+							placeholder="Select words count"
+						/>
 					</div>
-
 				</div>
 
 				<div className="border-t border-blue-200/60 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent h-px" />
@@ -161,7 +142,7 @@ export function ArticleForm({
 					</div>
 					<div className="bg-white/95 p-4 rounded-xl border border-blue-100/60 shadow-md">
 						<Label htmlFor={keywordsId} className="text-blue-800 font-medium">
-							Your Keywords <span className="text-red-500">*</span>
+							Your Keywords
 						</Label>
 						<div className="relative mt-2">
 							<Tags className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
@@ -214,7 +195,14 @@ export function ArticleForm({
 				<div className="pt-4">
 					<Button
 						onClick={onGenerate}
-						disabled={!formData.topic || !formData.offeredWords || isGenerating}
+						disabled={
+							!formData.categoryName ||
+							!formData.level ||
+							!formData.format ||
+							!formData.wordsCountRange ||
+							!formData.topic ||
+							isGenerating
+						}
 						className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 hover:from-blue-700 hover:via-blue-800 hover:to-blue-900 shadow-xl border border-blue-500/20 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 						size="lg"
 					>

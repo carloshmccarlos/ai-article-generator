@@ -22,3 +22,16 @@ export const articles = pgTable("articles", {
 
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const advice = pgTable("advice", {
+	id: serial("id").primaryKey(),
+	content: text("content").notNull(),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const userFeedback = pgTable("user_feedback", {
+	id: serial("id").primaryKey(),
+	feedbackType: varchar("feedback_type", { length: 50 }).notNull(), // "satisfied", "not_satisfied", etc.
+	articleTitle: varchar("article_title", { length: 255 }), // Optional: title of the article they were reviewing
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});

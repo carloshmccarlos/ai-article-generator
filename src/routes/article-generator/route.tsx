@@ -3,10 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArticleForm } from "~/components/ArticleForm";
 import { ArticlePreview } from "~/components/ArticlePreview";
+import { FeedbackComponent } from "~/components/FeedbackComponent";
 import Spinner from "~/components/Spinner";
 import TitlePart from "~/components/TitlePart";
 import TopBar from "~/components/TopBar";
-import { generateArticle } from "~/serverFn/genreate-article";
+import { generateArticle } from "~/serverFn/articleServerFn";
 import type { ArticleFormData } from "~/validation/articleSchema";
 
 export const Route = createFileRoute("/article-generator")({
@@ -21,7 +22,7 @@ function ArticleGenerator() {
 		wordsCountRange: "",
 		format: "",
 		topic: "",
-		offeredWords: "",
+		offeredWords: [""],
 		additionalNotes: "",
 	});
 
@@ -96,6 +97,12 @@ function ArticleGenerator() {
 								content={generatedArticle}
 								title={generatedTitle}
 								wordCount={wordCount}
+							/>
+
+							<FeedbackComponent
+								article={generatedArticle}
+								title={generatedTitle}
+								formData={formData}
 							/>
 						</>
 					)}

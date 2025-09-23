@@ -1,4 +1,5 @@
 import { levels } from "~/lib/db/local-data/levels";
+import { parseOfferedWords } from "~/lib/utils";
 import type { ArticleFormData } from "~/validation/articleSchema";
 
 export interface PromptTemplate {
@@ -47,10 +48,7 @@ Always ensure your content demonstrates intellectual rigor while remaining acces
 		const wordRange = wordCountMap[wordsCountRange] || wordCountMap.medium;
 
 		// Format keywords for better integration
-		const keywords = offeredWords
-			.split(/[,;]/)
-			.map((k) => k.trim())
-			.filter((k) => k.length > 0);
+		const keywords = parseOfferedWords(offeredWords);
 
 		const levelDescription = levels.find((l) => l.name === level)?.description;
 

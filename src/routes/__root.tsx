@@ -10,6 +10,9 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SquarePen } from "lucide-react";
 import { ThemeProvider } from "~/components/theme-provider";
 import { Toaster } from "~/components/ui/sonner";
 import appCss from "~/styles.css?url";
@@ -31,11 +34,13 @@ export const Route = createRootRouteWithContext<{
 			},
 			{
 				name: "description",
-				content: "Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
+				content:
+					"Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
 			},
 			{
 				name: "keywords",
-				content: "AI article generator, content creation, artificial intelligence writing, automated content, blog writing, SEO content, article writing tool, AI writer",
+				content:
+					"AI article generator, content creation, artificial intelligence writing, automated content, blog writing, SEO content, article writing tool, AI writer",
 			},
 			{
 				name: "author",
@@ -56,7 +61,8 @@ export const Route = createRootRouteWithContext<{
 			},
 			{
 				property: "og:description",
-				content: "Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
+				content:
+					"Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
 			},
 			{
 				property: "og:image",
@@ -81,7 +87,8 @@ export const Route = createRootRouteWithContext<{
 			},
 			{
 				name: "twitter:description",
-				content: "Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
+				content:
+					"Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
 			},
 			{
 				name: "twitter:image",
@@ -131,6 +138,8 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 				/>
 
 				<Scripts />
+				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);

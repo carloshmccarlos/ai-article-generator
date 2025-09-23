@@ -7,17 +7,19 @@ export type ArticleFormat = {
 
 export const articleFormats: ArticleFormat[] = [
 	{
-		name: "Letter",
-		description: "Formal or informal letters, personal or professional.",
-		structure: "Greeting → Body → Closing",
-		audience: "Students, professionals, casual readers",
-	},
-	{
 		name: "Essay / Article",
 		description: "Structured essays or blog articles on various topics.",
 		structure: "Introduction → Body → Conclusion",
 		audience: "Students, general readers, learners",
 	},
+
+	{
+		name: "Letter",
+		description: "Formal or informal letters, personal or professional.",
+		structure: "Greeting → Body → Closing",
+		audience: "Students, professionals, casual readers",
+	},
+
 	{
 		name: "Report",
 		description: "Analytical or academic reports, factual and structured.",

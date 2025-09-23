@@ -26,6 +26,8 @@ function ArticleGenerator() {
 	});
 
 	const [generatedArticle, setGeneratedArticle] = useState<string>("");
+	const [generatedTitle, setGeneratedTitle] = useState<string>("");
+	const [wordCount, setWordCount] = useState<number>(0);
 	const [isGenerating, setIsGenerating] = useState(false);
 
 	const hasArticle = generatedArticle.trim().length > 0;
@@ -42,12 +44,31 @@ function ArticleGenerator() {
 		setIsGenerating(true);
 		// Clear previous article while generating to avoid showing stale content
 		setGeneratedArticle("");
-		// Simulate article generation
-		await new Promise((resolve) => setTimeout(resolve, 2000));
 
-		const { result } = await generateArticle({ data: formData });
+		try {
+			const response = await generateArticle({ data: formData });
 
-		setGeneratedArticle(result);
+			if (response.success) {
+				setGeneratedArticle(
+					response.article || "No article content generated.",
+				);
+				// Store additional metadata if available
+				if (response.title) {
+					setGeneratedTitle(response.title);
+				}
+				if (response.wordCount) {
+					setWordCount(response.wordCount);
+				}
+			} else {
+				console.error("Article generation failed:", response.error);
+
+				setGeneratedArticle(`Error: ${response.error}`);
+			}
+		} catch (error) {
+			console.error("Error calling generateArticle:", error);
+			setGeneratedArticle("An error occurred while generating the article.");
+		}
+
 		setIsGenerating(false);
 	};
 
@@ -71,7 +92,11 @@ function ArticleGenerator() {
 								generatedArticle={generatedArticle}
 								setGeneratedArticle={setGeneratedArticle}
 							/>
-							<ArticlePreview content={generatedArticle} />
+							<ArticlePreview
+								content={generatedArticle}
+								title={generatedTitle}
+								wordCount={wordCount}
+							/>
 						</>
 					)}
 				</div>

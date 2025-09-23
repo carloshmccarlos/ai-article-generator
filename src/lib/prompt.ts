@@ -1,165 +1,195 @@
+import { levels } from "~/lib/db/local-data/levels";
 import type { ArticleFormData } from "~/validation/articleSchema";
 
 export interface PromptTemplate {
-  systemPrompt: string;
-  userPrompt: (data: ArticleFormData) => string;
+	systemPrompt: string;
+	userPrompt: (data: ArticleFormData) => string;
 }
 
 export const articleGenerationPrompt: PromptTemplate = {
-  systemPrompt: `You are an expert AI article writer specializing in creating high-quality, engaging content. You have extensive knowledge across various topics and can adapt your writing style to different formats, difficulty levels, and target audiences.
+	systemPrompt: `You are an expert AI journalist and science/business writer, specializing in creating high-quality content in the style of New Scientist and The Economist. Your writing combines rigorous research with engaging, accessible prose that informs and challenges readers.
 
-Your task is to generate well-researched, informative, and engaging articles based on the provided specifications. Always ensure your content is:
+Your articles should emulate the professional journalism style of:
+- **New Scientist**: Evidence-based reporting, clear explanations of complex topics, focus on scientific and technological developments, analytical depth with accessible language
+- **The Economist**: Authoritative business and economic analysis, global perspective, data-driven insights, sophisticated yet readable prose, balanced and well-researched viewpoints
 
-1. Accurate and factually correct
-2. Well-structured and easy to read
-3. Engaging and informative
-4. Appropriate for the specified reading level
-5. Optimized for the chosen format
-6. Within the specified word count range
-7. Relevant to the topic and keywords provided
+Key characteristics of your writing style:
+1. **Evidence-based**: Support claims with facts, data, and expert insights
+2. **Analytical**: Provide context, implications, and deeper understanding
+3. **Authoritative**: Write with confidence and expertise
+4. **Engaging**: Use compelling narratives and clear explanations
+5. **Balanced**: Present multiple perspectives when relevant
+6. **Professional**: Maintain journalistic integrity and accuracy
 
-When writing, focus on clarity, proper grammar, and maintaining reader interest throughout the article.`,
+Always ensure your content demonstrates intellectual rigor while remaining accessible to educated readers.`,
 
-  userPrompt: (data: ArticleFormData) => {
-    const {
-      categoryName,
-      subcategory,
-      level,
-      format,
-      wordsCountRange,
-      topic,
-      offeredWords,
-      additionalNotes
-    } = data;
+	userPrompt: (data: ArticleFormData) => {
+		const {
+			categoryName,
+			subcategory,
+			level,
+			format,
+			wordsCountRange,
+			topic,
+			offeredWords,
+			additionalNotes,
+		} = data;
 
-    // Get word count range
-    const wordCountMap: Record<string, { min: number; max: number }> = {
-      veryShort: { min: 50, max: 300 },
-      short: { min: 300, max: 600 },
-      medium: { min: 600, max: 1000 },
-      long: { min: 1000, max: 1500 },
-      extended: { min: 1500, max: 2000 }
-    };
+		// Get word count range
+		const wordCountMap: Record<string, { min: number; max: number }> = {
+			veryShort: { min: 50, max: 300 },
+			short: { min: 300, max: 600 },
+			medium: { min: 600, max: 1000 },
+			long: { min: 1000, max: 1500 },
+			extended: { min: 1500, max: 2000 },
+		};
 
-    const wordRange = wordCountMap[wordsCountRange] || wordCountMap.medium;
+		const wordRange = wordCountMap[wordsCountRange] || wordCountMap.medium;
 
-    // Format keywords for better integration
-    const keywords = offeredWords
-      .split(/[,;]/)
-      .map(k => k.trim())
-      .filter(k => k.length > 0);
+		// Format keywords for better integration
+		const keywords = offeredWords
+			.split(/[,;]/)
+			.map((k) => k.trim())
+			.filter((k) => k.length > 0);
 
-    // Build base sections
-    const baseSections = [
-      `**Topic:** ${topic}`,
-      ``,
-      `**Category:** ${categoryName}`,
-      `**Subcategory:** ${subcategory}`,
-      ``,
-      `**Reading Level:** ${level}`,
-      `- Write at an appropriate complexity level for this audience`,
-      `- Use vocabulary and sentence structures suitable for ${level} readers`,
-      `- Avoid overly complex terminology unless necessary and explained`,
-      ``,
-      `**Format:** ${format}`,
-      `- Structure the article according to ${format} conventions`,
-      `- Include appropriate sections, headings, and formatting for this format`,
-      ``,
-      `**Word Count:** ${wordRange.min}-${wordRange.max} words`,
-      `- Aim for approximately ${Math.round((wordRange.min + wordRange.max) / 2)} words`,
-      `- Ensure the content is comprehensive but concise`,
-    ];
+		const levelDescription = levels.find((l) => l.name === level)?.description;
 
-    // Add keywords section only if there are keywords
-    const keywordSections = keywords.length > 0 ? [
-      ``,
-      `**Keywords to Include:** ${keywords.join(', ')}`,
-      `- Naturally integrate these keywords throughout the article`,
-      `- Use them in headings, introductions, and key points where appropriate`,
-      `- Don't force keywords unnaturally into the content`
-    ] : [];
+		// Handle optional topic - if empty, use category/subcategory as primary focus
+		const primaryFocus = topic && topic.trim()
+			? topic
+			: `${categoryName}${subcategory ? ` - ${subcategory}` : ''}`;
 
-    // Add additional instructions section only if there are additional notes
-    const additionalSections = additionalNotes && additionalNotes.trim().length > 0 ? [
-      ``,
-      `**Additional Instructions:** ${additionalNotes}`
-    ] : [];
+		// Build base sections with professional journalism style
+		const baseSections = [
+			`**Primary Focus:** ${primaryFocus}`,
+			``,
+			`**Content Category:** ${categoryName}`,
+			...(subcategory ? [`**Subcategory:** ${subcategory}`] : []),
+			``,
+			`**Target Readership:** ${level}-${levelDescription}`,
+			`- Write for educated, curious readers who want depth and insight`,
+			`- Use sophisticated vocabulary balanced with clear explanations`,
+			`- Assume readers have basic knowledge but appreciate context and analysis`,
+			``,
+			`**Article Format:** ${format}`,
+			`- Structure as a professional magazine article with proper sections`,
+			`- Include compelling introduction, analytical body, and insightful conclusion`,
+			`- Use journalistic conventions appropriate to the format`,
+			``,
+			`**Word Count Target:** ${wordRange.min}-${wordRange.max} words`,
+			`- Aim for approximately ${Math.round((wordRange.min + wordRange.max) / 2)} words`,
+			`- Prioritize quality and depth over length`,
+		];
 
-    // Writing guidelines
-    const guidelines = [
-      ``,
-      `**Writing Guidelines:**`,
-      ``,
-      `1. **Content Quality:**`,
-      `   - Ensure all information is accurate and up-to-date`,
-      `   - Provide valuable insights and actionable information`,
-      `   - Maintain objectivity and balance different perspectives when relevant`,
-      ``,
-      `2. **Structure & Flow:**`,
-      `   - Create a logical flow from introduction to conclusion`,
-      `   - Use clear, descriptive headings for easy navigation`,
-      `   - Include smooth transitions between sections`,
-      `   - End with a strong conclusion that summarizes key points`,
-      ``,
-      `3. **Engagement:**`,
-      `   - Start with a compelling hook or interesting fact`,
-      `   - Use storytelling elements when appropriate`,
-      `   - Include relevant examples or case studies`,
-      `   - Ask rhetorical questions to maintain reader interest`,
-      ``,
-      `4. **SEO Optimization:**`,
-      `   - Include keywords in the title, introduction, and throughout the content`,
-      `   - Use descriptive subheadings that include relevant keywords`,
-      `   - Ensure the content is scannable with short paragraphs and bullet points`,
-      ``,
-      `5. **Technical Requirements:**`,
-      `   - Use proper grammar, spelling, and punctuation`,
-      `   - Maintain consistent tense and voice throughout`,
-      `   - Format the article with appropriate markdown (headings, bold, italics, lists)`,
-      `   - Include any relevant formatting specific to the ${format} style`,
-      ``,
-      `**Output Format:**`,
-      `Please provide the article in a clean, readable format with:`,
-      `- A compelling title`,
-      `- Proper heading structure (H1, H2, H3 as appropriate)`,
-      `- Well-organized paragraphs`,
-      `- Bullet points or numbered lists where helpful`,
-      `- Any relevant emphasis using bold or italics`,
-      ``,
-      `Generate a high-quality, original article that meets all these specifications.`
-    ];
+		// Add keywords section only if there are keywords
+		const keywordSections =
+			keywords.length > 0
+				? [
+						``,
+						`**Key Terms to Integrate:** ${keywords.join(", ")}`,
+						`- Incorporate these terms naturally throughout the analysis`,
+						`- Use them in contexts that highlight their significance`,
+						`- Ensure they flow organically within the narrative`,
+					]
+				: [];
 
-    const allSections = [
-      ...baseSections,
-      ...keywordSections,
-      ...additionalSections,
-      ...guidelines
-    ];
+		// Add additional instructions section only if there are additional notes
+		const additionalSections =
+			additionalNotes && additionalNotes.trim().length > 0
+				? [``, `**Specific Requirements:** ${additionalNotes}`]
+				: [];
 
-    return `Please generate an article with the following specifications:
+		// Professional journalism guidelines
+		const guidelines = [
+			``,
+			`**Journalistic Standards:**`,
+			``,
+			`**1. Research & Accuracy:**`,
+			`   - Base content on verified facts and expert insights`,
+			`   - Provide context and background information`,
+			`   - Include relevant data, statistics, or examples to support points`,
+			``,
+			`**2. Analysis & Insight:**`,
+			`   - Go beyond surface-level reporting to explore implications`,
+			`   - Analyze trends, causes, and potential consequences`,
+			`   - Offer informed perspectives on the topic's significance`,
+			``,
+			`**3. Structure & Narrative:**`,
+			`   - Begin with a strong, engaging lead that hooks the reader`,
+			`   - Organize information logically with clear sections and transitions`,
+			`   - Build arguments progressively, leading to insightful conclusions`,
+			`   - End with forward-looking analysis or key takeaways`,
+			``,
+			`**4. Writing Excellence:**`,
+			`   - Employ precise, professional language with varied sentence structure`,
+			`   - Use active voice and strong verbs for dynamic prose`,
+			`   - Maintain objectivity while providing authoritative analysis`,
+			`   - Create compelling narratives that inform and engage`,
+			``,
+			`**5. Professional Formatting:**`,
+			`   - Use markdown formatting to create clear article structure`,
+			`   - Include descriptive subheadings for easy navigation`,
+			`   - Employ emphasis (bold, italics) to highlight key points`,
+			`   - Format quotes, data, and examples professionally`,
+			``,
+			`**Output Requirements:**`,
+			`Generate a professional magazine-style article that demonstrates:`,
+			`- Deep understanding of the subject matter`,
+			`- Analytical rigor and intellectual honesty`,
+			`- Engaging storytelling with factual accuracy`,
+			`- Professional presentation and clear organization`,
+		];
 
-**Article Requirements:**
-${allSections.join('\n')}`;
-  }
+		const allSections = [
+			...baseSections,
+			...keywordSections,
+			...additionalSections,
+			...guidelines
+		];
+
+		return `Generate a professional article in the style of New Scientist or The Economist:
+
+**Article Brief:**
+${allSections.join("\n")}`;
+	},
 };
 
 // Helper function to generate the full prompt
 export function generateArticlePrompt(data: ArticleFormData): string {
-  return `${articleGenerationPrompt.systemPrompt}\n\n${articleGenerationPrompt.userPrompt(data)}`;
+	return `${articleGenerationPrompt.systemPrompt}\n\n${articleGenerationPrompt.userPrompt(data)}`;
 }
 
 // Helper function to get word count guidance
 export function getWordCountGuidance(wordsCountRange: string): string {
-  const wordCountMap: Record<string, { min: number; max: number; description: string }> = {
-    veryShort: { min: 50, max: 300, description: "Brief overview or quick tips" },
-    short: { min: 300, max: 600, description: "Standard blog post or article" },
-    medium: { min: 600, max: 1000, description: "In-depth analysis or tutorial" },
-    long: { min: 1000, max: 1500, description: "Comprehensive guide or feature article" },
-    extended: { min: 1500, max: 2000, description: "Long-form content or detailed research" }
-  };
+	const wordCountMap: Record<
+		string,
+		{ min: number; max: number; description: string }
+	> = {
+		veryShort: {
+			min: 50,
+			max: 300,
+			description: "Brief overview or quick tips",
+		},
+		short: { min: 300, max: 600, description: "Standard blog post or article" },
+		medium: {
+			min: 600,
+			max: 1000,
+			description: "In-depth analysis or tutorial",
+		},
+		long: {
+			min: 1000,
+			max: 1500,
+			description: "Comprehensive guide or feature article",
+		},
+		extended: {
+			min: 1500,
+			max: 2000,
+			description: "Long-form content or detailed research",
+		},
+	};
 
-  const range = wordCountMap[wordsCountRange];
-  if (!range) return "Standard length article";
+	const range = wordCountMap[wordsCountRange];
+	if (!range) return "Standard length article";
 
-  return `${range.min}-${range.max} words: ${range.description}`;
+	return `${range.min}-${range.max} words: ${range.description}`;
 }

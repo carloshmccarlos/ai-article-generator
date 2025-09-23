@@ -27,14 +27,72 @@ export const Route = createRootRouteWithContext<{
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "React TanStarter",
+				title: "AI Article Generator - Create Professional Content with AI",
 			},
 			{
 				name: "description",
-				content: "A minimal starter template for 🏝️ TanStack Start.",
+				content: "Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
+			},
+			{
+				name: "keywords",
+				content: "AI article generator, content creation, artificial intelligence writing, automated content, blog writing, SEO content, article writing tool, AI writer",
+			},
+			{
+				name: "author",
+				content: "AI Article Generator",
+			},
+			{
+				name: "robots",
+				content: "index, follow",
+			},
+			// Open Graph / Facebook
+			{
+				property: "og:type",
+				content: "website",
+			},
+			{
+				property: "og:title",
+				content: "AI Article Generator - Create Professional Content with AI",
+			},
+			{
+				property: "og:description",
+				content: "Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
+			},
+			{
+				property: "og:image",
+				content: "/og-image.png",
+			},
+			{
+				property: "og:url",
+				content: "https://ai-article-generator.com",
+			},
+			{
+				property: "og:site_name",
+				content: "AI Article Generator",
+			},
+			// Twitter
+			{
+				name: "twitter:card",
+				content: "summary_large_image",
+			},
+			{
+				name: "twitter:title",
+				content: "AI Article Generator - Create Professional Content with AI",
+			},
+			{
+				name: "twitter:description",
+				content: "Generate professional, engaging articles using advanced AI technology. Simply provide your keywords and watch as our intelligent system creates perfect content tailored to your needs.",
+			},
+			{
+				name: "twitter:image",
+				content: "/og-image.png",
 			},
 		],
-		links: [{ rel: "stylesheet", href: appCss }],
+		links: [
+			{ rel: "stylesheet", href: appCss },
+			{ rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+			{ rel: "canonical", href: "https://ai-article-generator.com" },
+		],
 	}),
 	component: RootComponent,
 });
@@ -49,7 +107,6 @@ function RootComponent() {
 
 function RootDocument({ children }: { readonly children: React.ReactNode }) {
 	return (
-		// suppress since we're updating the "dark" class in ThemeProvider
 		<html lang="en" suppressHydrationWarning>
 			<head>
 				<HeadContent />

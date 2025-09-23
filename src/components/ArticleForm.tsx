@@ -119,18 +119,18 @@ export function ArticleForm({
 					<div className="flex items-center gap-2">
 						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
 						<h3 className="text-sm font-semibold text-blue-700">
-							Content Details
+							Content Details (Optional)
 						</h3>
 					</div>
 					<div className="bg-white/80 p-4 rounded-xl border border-blue-100/60 shadow-sm">
 						<Label htmlFor={topicId} className="text-blue-800 font-medium">
-							Article Topic <span className="text-red-500">*</span>
+							Article Topic
 						</Label>
 						<div className="relative mt-2">
 							<BookText className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
 							<Input
 								id={topicId}
-								placeholder="e.g. Modern React Patterns in 2025"
+								placeholder="e.g. Iphone color popularity"
 								value={formData.topic}
 								onChange={(e) => onChange("topic", e.target.value)}
 								className="pl-9 border-blue-200/60 focus:border-blue-400 focus:ring-blue-400/20 bg-white/95"
@@ -148,7 +148,7 @@ export function ArticleForm({
 							<Tags className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
 							<Input
 								id={keywordsId}
-								placeholder="seo, performance, react, testing"
+								placeholder="apple, performance, examination, lithium"
 								value={formData.offeredWords}
 								onChange={(e) => onChange("offeredWords", e.target.value)}
 								className="pl-9 border-blue-200/60 focus:border-blue-400 focus:ring-blue-400/20 bg-white/95"
@@ -200,7 +200,6 @@ export function ArticleForm({
 							!formData.level ||
 							!formData.format ||
 							!formData.wordsCountRange ||
-							!formData.topic ||
 							isGenerating
 						}
 						className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 hover:from-blue-700 hover:via-blue-800 hover:to-blue-900 shadow-xl border border-blue-500/20 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"

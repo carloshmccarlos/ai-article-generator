@@ -6,7 +6,7 @@ import { DefaultCatchBoundary } from "~/components/default-catch-boundary";
 import { DefaultNotFound } from "~/components/default-not-found";
 import { routeTree } from "./routeTree.gen";
 
-export function getRouter() {
+export function createRouter() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -41,6 +41,6 @@ export function getRouter() {
 
 declare module "@tanstack/react-router" {
   interface Register {
-    router: ReturnType<typeof getRouter>;
+    router: ReturnType<typeof createRouter>;
   }
 }

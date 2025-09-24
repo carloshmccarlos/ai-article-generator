@@ -4,6 +4,8 @@
 	"type": "module",
 	"description": "An AI-powered article generator that creates professional, engaging content from user-provided keywords and topics. Built with React, TanStack Router, and modern web technologies.",
 	"scripts": {
+		"deploy": "npm run build && wrangler deploy",
+		"cf-typegen": "wrangler types --env-interface Env",
 		"dev": "vite dev --port 3000",
 		"build": "vite build",
 		"start": "node .output/server/index.mjs",
@@ -32,8 +34,6 @@
 		"@tanstack/react-router-ssr-query": "^1.131.28",
 		"@tanstack/react-start": "^1.131.28",
 		"@types/react-syntax-highlighter": "^15.5.13",
-		"@vercel/analytics": "^1.5.0",
-		"@vercel/speed-insights": "^1.2.0",
 		"@vitejs/plugin-react": "^5.0.2",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
@@ -48,6 +48,7 @@
 		"tailwind-merge": "^3.3.1",
 		"valibot": "^1.1.0",
 		"vite": "^7.1.3",
+		"wrangler": "^4.38.0",
 		"zod": "^4.1.4"
 	},
 	"devDependencies": {

@@ -10,8 +10,6 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SquarePen } from "lucide-react";
 import { ThemeProvider } from "~/components/theme-provider";
 import { Toaster } from "~/components/ui/sonner";
@@ -138,8 +136,6 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 				/>
 
 				<Scripts />
-				<Analytics />
-				<SpeedInsights />
 			</body>
 		</html>
 	);

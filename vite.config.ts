@@ -20,7 +20,7 @@ export default defineConfig({
 				semicolons: true,
 			},
 
-			target: "vercel",
+			target: "cloudflare-module",
 		}),
 		viteReact({
 			// https://react.dev/learn/react-compiler

@@ -21,6 +21,6 @@ export default defineConfig({
         }),
         viteReact(),
         tailwindcss(),
-        cloudflare(),
+        netlify()
     ],
 });

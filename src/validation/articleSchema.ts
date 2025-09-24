@@ -16,6 +16,7 @@ export const ArticleCreateSchema = v.object({
 	subcategory: v.string(),
 	level: v.string(),
 	format: v.string(),
+	title: v.string(),
 	wordsCountRange: v.string(),
 	topic: v.string(),
 	offeredWords: v.array(v.string()),

@@ -35,6 +35,7 @@ export function FeedbackComponent({
 				data: {
 					...formData,
 					content: article,
+					title: title,
 				},
 			});
 

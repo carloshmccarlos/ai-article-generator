@@ -95,6 +95,7 @@ export const createArticle = createServerFn()
 			const result = await db
 				.insert(articles)
 				.values({
+					title: data.title,
 					categoryName: data.categoryName,
 					subcategory: data.subcategory,
 					level: data.level,

@@ -21,7 +21,7 @@ const ai = new GoogleGenAI({
 });
 
 export const generateArticle = createServerFn()
-	.validator(ArticleGenerateSchema)
+	.inputValidator(ArticleGenerateSchema)
 	.handler(async ({ data }) => {
 		const prompt = generateArticlePrompt(data);
 
@@ -89,7 +89,7 @@ export const generateArticle = createServerFn()
 	});
 
 export const createArticle = createServerFn()
-	.validator(ArticleCreateSchema)
+	.inputValidator(ArticleCreateSchema)
 	.handler(async ({ data }) => {
 		try {
 			const result = await db
@@ -124,7 +124,7 @@ export const createArticle = createServerFn()
 	});
 
 export const recordFeedback = createServerFn()
-	.validator(recordFeedbackSchema)
+	.inputValidator(recordFeedbackSchema)
 	.handler(async ({ data }) => {
 		try {
 			await db.insert(userFeedback).values({
@@ -145,7 +145,7 @@ export const recordFeedback = createServerFn()
 	});
 
 export const submitAdvice = createServerFn()
-	.validator(adviceSchema)
+	.inputValidator(adviceSchema)
 	.handler(async ({ data }) => {
 		try {
 			const result = await db

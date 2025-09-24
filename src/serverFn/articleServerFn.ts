@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { createServerFn } from "@tanstack/react-start";
 import { desc } from "drizzle-orm";
 import { parse } from "valibot";
-import { env } from "~/env/server";
+
 import { db } from "~/lib/db";
 import { advice, articles, userFeedback } from "~/lib/db/schema";
 import { generateArticlePrompt } from "~/lib/prompt";
@@ -17,11 +17,11 @@ import {
 } from "~/validation/articleSchema";
 
 const ai = new GoogleGenAI({
-	apiKey: env.GEMINI_API_KEY,
+	apiKey: process.env.GEMINI_API_KEY || "",
 });
 
 export const generateArticle = createServerFn()
-	.validator(ArticleGenerateSchema)
+	.inputValidator(ArticleGenerateSchema)
 	.handler(async ({ data }) => {
 		const prompt = generateArticlePrompt(data);
 
@@ -89,7 +89,7 @@ export const generateArticle = createServerFn()
 	});
 
 export const createArticle = createServerFn()
-	.validator(ArticleCreateSchema)
+	.inputValidator(ArticleCreateSchema)
 	.handler(async ({ data }) => {
 		try {
 			const result = await db
@@ -123,7 +123,7 @@ export const createArticle = createServerFn()
 	});
 
 export const recordFeedback = createServerFn()
-	.validator(recordFeedbackSchema)
+	.inputValidator(recordFeedbackSchema)
 	.handler(async ({ data }) => {
 		try {
 			await db.insert(userFeedback).values({
@@ -144,7 +144,7 @@ export const recordFeedback = createServerFn()
 	});
 
 export const submitAdvice = createServerFn()
-	.validator(adviceSchema)
+	.inputValidator(adviceSchema)
 	.handler(async ({ data }) => {
 		try {
 			const result = await db

@@ -1,9 +1,14 @@
-import { neon } from "@neondatabase/serverless";
-import { serverOnly } from "@tanstack/react-start";
-import { drizzle } from "drizzle-orm/neon-http";
-import { env } from "~/env/server";
+import {neon} from "@neondatabase/serverless";
+import {drizzle} from "drizzle-orm/neon-http";
 
-const sql = neon(env.DATABASE_URL);
-const getDatabase = serverOnly(() => drizzle({ client: sql }));
+// Prefer Vite's import.meta.env during dev/SSR, fallback to process.env
+const DATABASE_URL = (import.meta as any).env?.DATABASE_URL ?? process.env.DATABASE_URL;
 
-export const db = getDatabase();
+if (!DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL is not set. Define it in your .env (or .env.local) at project root, e.g. DATABASE_URL=postgresql://..."
+  );
+}
+
+const sql = neon(DATABASE_URL);
+export const db = drizzle({client: sql});

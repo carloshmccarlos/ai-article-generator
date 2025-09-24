@@ -1,16 +1,13 @@
 /// <reference types="vite/client" />
 
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import {
 	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { SquarePen } from "lucide-react";
+
 import { ThemeProvider } from "~/components/theme-provider";
 import { Toaster } from "~/components/ui/sonner";
 import appCss from "~/styles.css?url";
@@ -122,18 +119,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 					<Toaster richColors />
 				</ThemeProvider>
 
-				<TanStackDevtools
-					plugins={[
-						{
-							name: "TanStack Query",
-							render: <ReactQueryDevtoolsPanel />,
-						},
-						{
-							name: "TanStack Router",
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-					]}
-				/>
+
 
 				<Scripts />
 			</body>

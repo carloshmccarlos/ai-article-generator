@@ -72,14 +72,9 @@ export const generateArticle = createServerFn()
                 // Parse the JSON response according to the schema
                 let parsedResponse: ArticleResponse;
 
-                try {
                     // Parse the JSON string response into an object
                     const jsonResponse = JSON.parse(generatedArticle);
                     parsedResponse = parse(ArticleResponseSchema, jsonResponse);
-                } catch (parseError) {
-                    console.error("Error parsing AI response:", parseError);
-                    throw new Error("Failed to parse article response");
-                }
 
                 return {
                     success: true,

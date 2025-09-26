@@ -31,6 +31,9 @@ export const generateArticle = createServerFn()
 					contents: prompt,
 
 					config: {
+						thinkingConfig: {
+							thinkingBudget: 0
+						},
 						responseMimeType: "application/json",
 						responseSchema: {
 							type: "object",

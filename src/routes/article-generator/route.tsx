@@ -77,7 +77,7 @@ function ArticleGenerator() {
 
     return (
         <>
-            <div className=" min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+            <div className="flex flex-col gap-8  min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
                 <div className="max-w-7xl mx-auto ">
                     <TitlePart/>
 
@@ -114,7 +114,7 @@ function ArticleGenerator() {
                     {isGenerating && <Spinner/>}
                 </div>
 
-                <div>
+                <div className={'flex justify-end items-center'}>
                     <Button
                         type={"button"}
                         onClick={() =>
@@ -141,7 +141,6 @@ function ArticleGenerator() {
                     </Button>
                 </div>
             </div>
-
         </>
     );
 }

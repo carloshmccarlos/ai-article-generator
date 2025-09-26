@@ -2,7 +2,7 @@ import {createServerFn} from "@tanstack/react-start";
 import {adviceSchema, recordFeedbackSchema} from "~/validation/articleSchema";
 import {db} from "~/lib/db";
 import {advice, userFeedback} from "~/lib/db/schema";
-import {desc} from "drizzle-orm";
+
 
 export const recordFeedback = createServerFn()
     .inputValidator(recordFeedbackSchema)

@@ -1,18 +1,16 @@
 import {GoogleGenAI} from "@google/genai";
 import {createServerFn} from "@tanstack/react-start";
-import {desc, eq} from "drizzle-orm";
 import {parse} from "valibot";
 
 import {db} from "~/lib/db";
-import {advice, articles, userFeedback, generatedCount} from "~/lib/db/schema";
+import {articles} from "~/lib/db/schema";
 import {generateArticlePrompt} from "~/lib/prompt";
 import {
     ArticleCreateSchema,
     ArticleGenerateSchema,
 
     ArticleResponseSchema,
-    adviceSchema,
-    recordFeedbackSchema,
+
 } from "~/validation/articleSchema";
 import {incrementGeneratedCount} from "~/serverFn/countServerFn";
 

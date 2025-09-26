@@ -6,7 +6,6 @@ import { parse } from "valibot";
 import { db } from "~/lib/db";
 import { advice, articles, userFeedback } from "~/lib/db/schema";
 import { generateArticlePrompt } from "~/lib/prompt";
-import { parseOfferedWords } from "~/lib/utils";
 import {
 	ArticleCreateSchema,
 	ArticleGenerateSchema,

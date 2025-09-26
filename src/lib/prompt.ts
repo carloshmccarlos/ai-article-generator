@@ -1,5 +1,4 @@
 import { levels } from "~/lib/db/local-data/levels";
-import { parseOfferedWords } from "~/lib/utils";
 import type { ArticleFormData } from "~/validation/articleSchema";
 
 export interface PromptTemplate {
@@ -46,8 +45,6 @@ Always ensure your content demonstrates intellectual rigor while remaining acces
 
 		const wordRange = wordCountMap[wordsCountRange] || wordCountMap.medium;
 
-		// Format keywords for better integration
-		const keywords = parseOfferedWords(offeredWords);
 
 		const levelDescription = levels.find((l) => l.name === level)?.description;
 
@@ -79,16 +76,15 @@ Always ensure your content demonstrates intellectual rigor while remaining acces
 		];
 
 		// Add keywords section only if there are keywords
-		const keywordSections =
-			keywords.length > 0
-				? [
-						``,
-						`**Key Terms to Integrate:** ${keywords.join(", ")}`,
-						`- Incorporate these terms naturally throughout the analysis`,
-						`- Use them in contexts that highlight their significance`,
-						`- Ensure they flow organically within the narrative`,
-					]
-				: [];
+		const keywordSections = offeredWords && offeredWords.trim().length > 0
+			? [
+					``,
+					`**Key Terms to Integrate:** ${offeredWords}`,
+					`- Incorporate these terms naturally throughout the analysis`,
+					`- Use them in contexts that highlight their significance`,
+					`- Ensure they flow organically within the narrative`,
+				]
+			: [];
 
 		// Professional journalism guidelines
 		const guidelines = [

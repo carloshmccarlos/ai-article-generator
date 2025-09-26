@@ -36,11 +36,11 @@ Always ensure your content demonstrates intellectual rigor while remaining acces
 
 		// Get word count range
 		const wordCountMap: Record<string, { min: number; max: number }> = {
-			veryShort: { min: 50, max: 300 },
-			short: { min: 300, max: 600 },
-			medium: { min: 600, max: 1000 },
-			long: { min: 1000, max: 1500 },
-			extended: { min: 1500, max: 2000 },
+			veryShort: { min: 100, max: 300 },
+			short: { min: 300, max: 500 },
+			medium: { min: 500, max: 700 },
+			long: { min: 700, max: 900 },
+			extended: { min: 900, max: 1000 },
 		};
 
 		const wordRange = wordCountMap[wordsCountRange] || wordCountMap.medium;

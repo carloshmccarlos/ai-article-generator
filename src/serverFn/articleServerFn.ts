@@ -25,31 +25,36 @@ export const generateArticle = createServerFn()
 		const prompt = generateArticlePrompt(data);
 
 		try {
-			const response = await ai.models.generateContent({
-				model: "gemini-2.5-pro",
-				contents: prompt,
+			const response = await Promise.race([
+				ai.models.generateContent({
+					model: "gemini-2.5-flash",
+					contents: prompt,
 
-				config: {
-					responseMimeType: "application/json",
-					responseSchema: {
-						type: "object",
-						properties: {
-							title: {
-								type: "string",
-								description: "The title of this article",
-							},
-							content: {
-								type: "string",
-								description: "Markdown Formatting of Article without title",
-							},
-							wordsCount: {
-								type: "integer",
-								description: "The count of the whole article words.",
+					config: {
+						responseMimeType: "application/json",
+						responseSchema: {
+							type: "object",
+							properties: {
+								title: {
+									type: "string",
+									description: "The title of this article",
+								},
+								content: {
+									type: "string",
+									description: "Markdown Formatting of Article without title",
+								},
+								wordsCount: {
+									type: "integer",
+									description: "The count of the whole article words.",
+								},
 							},
 						},
 					},
-				},
-			});
+				}),
+				new Promise((_, reject) =>
+					setTimeout(() => reject(new Error("Request timeout")), 60000)
+				)
+			]) as any;
 
 			const generatedArticle =
 				response.candidates?.[0]?.content?.parts?.[0]?.text || "";

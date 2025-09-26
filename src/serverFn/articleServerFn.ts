@@ -71,7 +71,7 @@ export const generateArticle = createServerFn()
                     },
                 });
 
-                console.log(response);
+
 
                 // Check if response exists and has candidates
                 if (!response || !response.candidates || response.candidates.length === 0) {

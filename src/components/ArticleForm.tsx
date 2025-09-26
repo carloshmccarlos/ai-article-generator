@@ -1,11 +1,10 @@
-import { BookText, PenSquare, Sparkles, Tags } from "lucide-react";
+import { BookText, Sparkles, Tags } from "lucide-react";
 import { useId } from "react";
 import { CommonSelect, type SelectOption } from "~/components/CommonSelect";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 import { articleFormats } from "~/lib/db/local-data/article-formats";
 import { categories } from "~/lib/db/local-data/categories";
 import { levels } from "~/lib/db/local-data/levels";
@@ -160,37 +159,6 @@ export function ArticleForm({
 						</p>
 					</div>
 				</div>
-
-		{/*		<div className="border-t border-blue-200/60 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent h-px" />
-
-				 Section 3: Fine-Tuning
-				<div className="space-y-6">
-					<div className="flex items-center gap-2">
-						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
-						<h3 className="text-sm font-semibold text-blue-700">
-							Fine-Tuning (Optional)
-						</h3>
-					</div>
-					<div className="bg-white/95 p-4 rounded-xl border border-blue-100/60 shadow-md">
-						<Label htmlFor={notesId} className="text-blue-800 font-medium">
-							Additional Notes
-						</Label>
-						<div className="relative mt-2">
-							<PenSquare className="absolute left-3 top-3 w-4 h-4 text-blue-400" />
-							<Textarea
-								id={notesId}
-								placeholder="Tone, length, audience, references, style…"
-								value={formData.additionalNotes}
-								onChange={(e) => onChange("additionalNotes", e.target.value)}
-								rows={3}
-								className="pl-9 border-blue-200/60 focus:border-blue-400 focus:ring-blue-400/20 bg-white/95 resize-none"
-							/>
-						</div>
-						<p className="mt-2 text-xs text-blue-600/70">
-							Add any constraints or context you'd like the model to follow.
-						</p>
-					</div>
-				</div>*/}
 
 				<div className="pt-4">
 					<Button

@@ -23,7 +23,6 @@ function ArticleGenerator() {
 		format: "",
 		topic: "",
 		offeredWords: "",
-		additionalNotes: "",
 	});
 
 	const [generatedArticle, setGeneratedArticle] = useState<string>("");

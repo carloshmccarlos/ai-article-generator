@@ -8,7 +8,6 @@ export const ArticleGenerateSchema = v.object({
 	wordsCountRange: v.string(),
 	topic: v.string(),
 	offeredWords: v.string(),
-	additionalNotes: v.string(),
 });
 
 export const ArticleCreateSchema = v.object({

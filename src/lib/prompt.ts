@@ -33,7 +33,6 @@ Always ensure your content demonstrates intellectual rigor while remaining acces
 			wordsCountRange,
 			topic,
 			offeredWords,
-			additionalNotes,
 		} = data;
 
 		// Get word count range
@@ -91,58 +90,11 @@ Always ensure your content demonstrates intellectual rigor while remaining acces
 					]
 				: [];
 
-		// Add additional instructions section only if there are additional notes
-		const additionalSections =
-			additionalNotes && additionalNotes.trim().length > 0
-				? [``, `**Specific Requirements:** ${additionalNotes}`]
-				: [];
-
-		// Professional journalism guidelines
-		const guidelines = [
-			``,
-			`**Journalistic Standards:**`,
-			``,
-			`**1. Research & Accuracy:**`,
-			`   - Base content on verified facts and expert insights`,
-			`   - Provide context and background information`,
-			`   - Include relevant data, statistics, or examples to support points`,
-			``,
-			`**2. Analysis & Insight:**`,
-			`   - Go beyond surface-level reporting to explore implications`,
-			`   - Analyze trends, causes, and potential consequences`,
-			`   - Offer informed perspectives on the topic's significance`,
-			``,
-			`**3. Structure & Narrative:**`,
-			`   - Begin with a strong, engaging lead that hooks the reader`,
-			`   - Organize information logically with clear sections and transitions`,
-			`   - Build arguments progressively, leading to insightful conclusions`,
-			`   - End with forward-looking analysis or key takeaways`,
-			``,
-			`**4. Writing Excellence:**`,
-			`   - Employ precise, professional language with varied sentence structure`,
-			`   - Use active voice and strong verbs for dynamic prose`,
-			`   - Maintain objectivity while providing authoritative analysis`,
-			`   - Create compelling narratives that inform and engage`,
-			``,
-			`**5. Professional Formatting:**`,
-			`   - Use markdown formatting to create clear article structure`,
-			`   - Include descriptive subheadings for easy navigation`,
-			`   - Employ emphasis (bold, italics) to highlight key points`,
-			`   - Format quotes, data, and examples professionally`,
-			``,
-			`**Output Requirements:**`,
-			`Generate a professional magazine-style article that demonstrates:`,
-			`- Deep understanding of the subject matter`,
-			`- Analytical rigor and intellectual honesty`,
-			`- Engaging storytelling with factual accuracy`,
-			`- Professional presentation and clear organization`,
-		];
 
 		const allSections = [
 			...baseSections,
 			...keywordSections,
-			...additionalSections,
-			...guidelines
+
 		];
 
 		return `Generate a professional article in the style of New Scientist or The Economist:

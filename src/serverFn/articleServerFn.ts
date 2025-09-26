@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import {GoogleGenAI} from "@google/genai";
 import {createServerFn} from "@tanstack/react-start";
 import {desc, eq} from "drizzle-orm";
 import {parse} from "valibot";
@@ -14,12 +14,12 @@ import {
     adviceSchema,
     recordFeedbackSchema,
 } from "~/validation/articleSchema";
-
+import {incrementGeneratedCount} from "~/serverFn/countServerFn";
 
 
 export const generateArticle = createServerFn()
     .inputValidator(ArticleGenerateSchema)
-    .handler(async ({ data }) => {
+    .handler(async ({data}) => {
         const prompt = generateArticlePrompt(data);
 
         // Retrieve keys and fail fast if neither is available
@@ -47,7 +47,7 @@ export const generateArticle = createServerFn()
 
                 const response = await ai.models.generateContent({
                     model: "gemini-2.5-flash-lite",
-                    contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    contents: [{role: "user", parts: [{text: prompt}]}],
                     config: {
                         responseMimeType: "application/json",
                         responseSchema: {
@@ -70,7 +70,6 @@ export const generateArticle = createServerFn()
                         },
                     },
                 });
-
 
 
                 // Check if response exists and has candidates
@@ -111,6 +110,9 @@ export const generateArticle = createServerFn()
                 }
 
                 console.log("Successfully generated and parsed article.");
+
+                await incrementGeneratedCount();
+
                 return {
                     success: true,
                     article: parsedResponse.content,
@@ -178,99 +180,3 @@ export const createArticle = createServerFn()
         }
     });
 
-export const recordFeedback = createServerFn()
-    .inputValidator(recordFeedbackSchema)
-    .handler(async ({data}) => {
-        try {
-            await db.insert(userFeedback).values({
-                feedbackType: data.feedbackType,
-                articleTitle: data.articleTitle,
-            });
-
-            return {
-                success: true,
-            };
-        } catch (error) {
-            console.error("Error recording feedback:", error);
-            return {
-                success: false,
-                error: "Failed to record feedback.",
-            };
-        }
-    });
-
-export const submitAdvice = createServerFn()
-    .inputValidator(adviceSchema)
-    .handler(async ({data}) => {
-        try {
-            const result = await db
-                .insert(advice)
-                .values({
-                    content: data.content,
-                })
-                .returning({id: advice.id});
-
-            return {
-                success: true,
-                adviceId: result[0].id,
-            };
-        } catch (error) {
-            console.error("Error submitting advice:", error);
-            return {
-                success: false,
-                error: "Failed to submit advice. Please try again.",
-            };
-        }
-    });
-
-export const getRecentAdvice = createServerFn().handler(async () => {
-    try {
-        const recentAdvice = await db
-            .select()
-            .from(advice)
-            .orderBy(desc(advice.createdAt))
-            .limit(10);
-
-        return {
-            success: true,
-            advice: recentAdvice,
-        };
-    } catch (error) {
-        console.error("Error fetching advice:", error);
-        return {
-            success: false,
-            error: "Failed to fetch advice.",
-        };
-    }
-});
-
-export const incrementGeneratedCount = createServerFn().handler(async () => {
-	try {
-		// First, try to get the current count with id
-		const currentCount = await db
-			.select({ id: generatedCount.id, count: generatedCount.count })
-			.from(generatedCount)
-			.limit(1);
-
-		if (currentCount.length > 0 && currentCount[0]) {
-			// Update existing count
-			await db
-				.update(generatedCount)
-				.set({ count: (currentCount[0].count || 0) + 1 })
-				.where(eq(generatedCount.id, currentCount[0].id));
-		} else {
-			// Insert new count record if none exists
-			await db.insert(generatedCount).values({ count: 1 });
-		}
-
-		return {
-			success: true,
-		};
-	} catch (error) {
-		console.error("Error incrementing generated count:", error);
-		return {
-			success: false,
-			error: "Failed to increment generated count.",
-		};
-	}
-});

@@ -39,5 +39,5 @@ export const userFeedback = pgTable("user_feedback", {
 
 export const generatedCount = pgTable("generated_count", {
 	id: serial("id").primaryKey(),
-	count: integer("count").default(0)
+	count: integer("count"),
 });

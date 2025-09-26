@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { AdviceForm } from "~/components/AdviceForm";
 import { Button } from "~/components/ui/button";
-import { createArticle, recordFeedback } from "~/serverFn/articleServerFn";
+import {  recordFeedback } from "~/serverFn/feedbackServerFn";
+
 import type { ArticleFormData } from "~/validation/articleSchema";
+import {createArticle} from "~/serverFn/articleServerFn";
 
 interface FeedbackComponentProps {
 	article: string;

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { submitAdvice } from "~/serverFn/articleServerFn";
+import { submitAdvice } from "~/serverFn/feedbackServerFn";
 
 interface AdviceFormProps {
 	onSubmit: () => void;

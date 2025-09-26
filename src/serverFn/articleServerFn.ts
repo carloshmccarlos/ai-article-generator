@@ -15,81 +15,101 @@ import {
     recordFeedbackSchema,
 } from "~/validation/articleSchema";
 
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY || "",
-});
+
 
 export const generateArticle = createServerFn()
     .inputValidator(ArticleGenerateSchema)
     .handler(async ({data}) => {
         const prompt = generateArticlePrompt(data);
 
-        try {
-            const response = await
-                ai.models.generateContent({
-                    model: "gemini-2.5-flash",
-                    contents: prompt,
+        const key1 = process.env.GEMINI_API_KEY1;
+        const key2 = process.env.GEMINI_API_KEY2;
 
-                    config: {
-                        thinkingConfig: {
-                            thinkingBudget: 0
-                        },
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "object",
-                            properties: {
-                                title: {
-                                    type: "string",
-                                    description: "The title of this article",
-                                },
-                                content: {
-                                    type: "string",
-                                    description: "Markdown Formatting of Article without title",
-                                },
-                                wordsCount: {
-                                    type: "integer",
-                                    description: "The count of the whole article words.",
+        let lastError: any = null;
+
+        for (let attempt = 1; attempt <= 6; attempt++) {
+            try {
+                // Alternate between key1 and key2: key1, key2, key1, key2, key1, key2
+                const apiKey = attempt % 2 === 1 ? key1 : key2;
+                if (!apiKey) {
+                    throw new Error(`No API key available for attempt ${attempt}`);
+                }
+
+                const ai = new GoogleGenAI({
+                    apiKey: apiKey,
+                });
+
+                const response = await
+                    ai.models.generateContent({
+                        model: "gemini-2.5-flash",
+                        contents: prompt,
+
+                        config: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "object",
+                                properties: {
+                                    title: {
+                                        type: "string",
+                                        description: "The title of this article",
+                                    },
+                                    content: {
+                                        type: "string",
+                                        description: "Markdown Formatting of Article without title",
+                                    },
+                                    wordsCount: {
+                                        type: "integer",
+                                        description: "The count of the whole article words.",
+                                    },
                                 },
                             },
                         },
-                    },
-                });
+                    });
 
+                const generatedArticle =
+                    response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-            const generatedArticle =
-                response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                // Parse the JSON response according to the schema
+                let parsedResponse: ArticleResponse;
 
-            // Parse the JSON response according to the schema
-            let parsedResponse: ArticleResponse;
+                try {
+                    // Parse the JSON string response into an object
+                    const jsonResponse = JSON.parse(generatedArticle);
+                    parsedResponse = parse(ArticleResponseSchema, jsonResponse);
+                } catch (parseError) {
+                    console.error("Error parsing AI response:", parseError);
+                    throw new Error("Failed to parse article response");
+                }
 
-            try {
-                // Parse the JSON string response into an object
-                const jsonResponse = JSON.parse(generatedArticle);
-                parsedResponse = parse(ArticleResponseSchema, jsonResponse);
-            } catch (parseError) {
-                console.error("Error parsing AI response:", parseError);
                 return {
-                    success: false,
-                    error: "Failed to parse article response. Please try again.",
-                    prompt: prompt,
+                    success: true,
+                    article: parsedResponse.content,
+                    title: parsedResponse.title,
+                    wordCount: parsedResponse.wordsCount,
+                    prompt: prompt, // Optionally include the prompt for debugging
                 };
-            }
 
-            return {
-                success: true,
-                article: parsedResponse.content,
-                title: parsedResponse.title,
-                wordCount: parsedResponse.wordsCount,
-                prompt: prompt, // Optionally include the prompt for debugging
-            };
-        } catch (error) {
-            console.error("Error generating article:", error);
-            return {
-                success: false,
-                error: "Failed to generate article. Please try again.",
-                prompt: prompt,
-            };
+            } catch (error) {
+                console.error(`Article generation attempt ${attempt} failed:`, error);
+                lastError = error;
+
+                // If this is the last attempt, don't continue
+                if (attempt === 6) {
+                    break;
+                }
+
+                // Wait a bit before retrying (exponential backoff)
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+            }
         }
+
+        // If we get here, all attempts failed
+        console.error("All article generation attempts failed:", lastError);
+        return {
+            success: false,
+            error: `Failed to generate article after 6 attempts. Last error: ${lastError?.message || "Unknown error"}`,
+            prompt: prompt,
+        };
     });
 
 export const createArticle = createServerFn()

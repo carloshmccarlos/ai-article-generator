@@ -155,37 +155,3 @@ export function generateArticlePrompt(data: ArticleFormData): string {
 	return `${articleGenerationPrompt.systemPrompt}\n\n${articleGenerationPrompt.userPrompt(data)}`;
 }
 
-// Helper function to get word count guidance
-export function getWordCountGuidance(wordsCountRange: string): string {
-	const wordCountMap: Record<
-		string,
-		{ min: number; max: number; description: string }
-	> = {
-		veryShort: {
-			min: 50,
-			max: 300,
-			description: "Brief overview or quick tips",
-		},
-		short: { min: 300, max: 600, description: "Standard blog post or article" },
-		medium: {
-			min: 600,
-			max: 1000,
-			description: "In-depth analysis or tutorial",
-		},
-		long: {
-			min: 1000,
-			max: 1500,
-			description: "Comprehensive guide or feature article",
-		},
-		extended: {
-			min: 1500,
-			max: 2000,
-			description: "Long-form content or detailed research",
-		},
-	};
-
-	const range = wordCountMap[wordsCountRange];
-	if (!range) return "Standard length article";
-
-	return `${range.min}-${range.max} words: ${range.description}`;
-}

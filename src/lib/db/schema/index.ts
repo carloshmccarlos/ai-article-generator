@@ -17,7 +17,7 @@ export const articles = pgTable("articles", {
 	format: varchar("format", { length: 50 }).notNull(),
 	wordsCountRange: varchar("word_count", { length: 50 }).notNull(),
 	topic: text("topic"),
-	offeredWords: jsonb("offered_words").$type<string[]>(),
+	offeredWords: varchar("offered_words"),
 	title: varchar("title", { length: 255 }).notNull(),
 	content: text("content").notNull(),
 

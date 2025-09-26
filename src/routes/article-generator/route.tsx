@@ -22,7 +22,7 @@ function ArticleGenerator() {
 		wordsCountRange: "",
 		format: "",
 		topic: "",
-		offeredWords: [""],
+		offeredWords: "",
 		additionalNotes: "",
 	});
 

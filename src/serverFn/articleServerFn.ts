@@ -102,10 +102,9 @@ export const createArticle = createServerFn()
 					format: data.format,
 					wordsCountRange: data.wordsCountRange,
 					topic: data.topic,
-					offeredWords:
-						parseOfferedWords(data.offeredWords).length > 0
-							? parseOfferedWords(data.offeredWords)
-							: null,
+					offeredWords: data.offeredWords && data.offeredWords.trim().length > 0
+						? data.offeredWords
+						: null,
 					content: data.content,
 				})
 				.returning({ id: articles.id });

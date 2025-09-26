@@ -7,7 +7,7 @@ export const ArticleGenerateSchema = v.object({
 	format: v.string(),
 	wordsCountRange: v.string(),
 	topic: v.string(),
-	offeredWords: v.array(v.string()),
+	offeredWords: v.string(),
 	additionalNotes: v.string(),
 });
 
@@ -19,7 +19,7 @@ export const ArticleCreateSchema = v.object({
 	title: v.string(),
 	wordsCountRange: v.string(),
 	topic: v.string(),
-	offeredWords: v.array(v.string()),
+	offeredWords: v.string(),
 	content: v.string(),
 });
 

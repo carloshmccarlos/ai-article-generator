@@ -161,9 +161,9 @@ export function ArticleForm({
 					</div>
 				</div>
 
-				<div className="border-t border-blue-200/60 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent h-px" />
+		{/*		<div className="border-t border-blue-200/60 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent h-px" />
 
-				{/* Section 3: Fine-Tuning */}
+				 Section 3: Fine-Tuning
 				<div className="space-y-6">
 					<div className="flex items-center gap-2">
 						<div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
@@ -190,7 +190,7 @@ export function ArticleForm({
 							Add any constraints or context you'd like the model to follow.
 						</p>
 					</div>
-				</div>
+				</div>*/}
 
 				<div className="pt-4">
 					<Button

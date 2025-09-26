@@ -1,4 +1,5 @@
 import {
+	integer,
 	pgTable,
 	serial,
 	text,
@@ -34,4 +35,9 @@ export const userFeedback = pgTable("user_feedback", {
 	feedbackType: varchar("feedback_type", { length: 50 }).notNull(), // "satisfied", "not_satisfied", etc.
 	articleTitle: varchar("article_title", { length: 255 }), // Optional: title of the article they were reviewing
 	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const generatedCount = pgTable("generated_count", {
+	id: serial("id").primaryKey(),
+	count: integer("count").default(0)
 });

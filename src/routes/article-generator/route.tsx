@@ -7,7 +7,7 @@ import { FeedbackComponent } from "~/components/FeedbackComponent";
 import Spinner from "~/components/Spinner";
 import TitlePart from "~/components/TitlePart";
 import TopBar from "~/components/TopBar";
-import { generateArticle } from "~/serverFn/articleServerFn";
+import {generateArticle, incrementGeneratedCount} from "~/serverFn/articleServerFn";
 import type { ArticleFormData } from "~/validation/articleSchema";
 
 export const Route = createFileRoute("/article-generator")({
@@ -59,6 +59,9 @@ function ArticleGenerator() {
 				if (response.wordCount) {
 					setWordCount(response.wordCount);
 				}
+
+				await incrementGeneratedCount();
+
 			} else {
 				console.error("Article generation failed:", response.error);
 

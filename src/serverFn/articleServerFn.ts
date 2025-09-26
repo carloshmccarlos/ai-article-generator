@@ -1,10 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 import {createServerFn} from "@tanstack/react-start";
-import {desc} from "drizzle-orm";
+import {desc, eq} from "drizzle-orm";
 import {parse} from "valibot";
 
 import {db} from "~/lib/db";
-import {advice, articles, userFeedback} from "~/lib/db/schema";
+import {advice, articles, userFeedback, generatedCount} from "~/lib/db/schema";
 import {generateArticlePrompt} from "~/lib/prompt";
 import {
     ArticleCreateSchema,
@@ -242,4 +242,35 @@ export const getRecentAdvice = createServerFn().handler(async () => {
             error: "Failed to fetch advice.",
         };
     }
+});
+
+export const incrementGeneratedCount = createServerFn().handler(async () => {
+	try {
+		// First, try to get the current count with id
+		const currentCount = await db
+			.select({ id: generatedCount.id, count: generatedCount.count })
+			.from(generatedCount)
+			.limit(1);
+
+		if (currentCount.length > 0 && currentCount[0]) {
+			// Update existing count
+			await db
+				.update(generatedCount)
+				.set({ count: (currentCount[0].count || 0) + 1 })
+				.where(eq(generatedCount.id, currentCount[0].id));
+		} else {
+			// Insert new count record if none exists
+			await db.insert(generatedCount).values({ count: 1 });
+		}
+
+		return {
+			success: true,
+		};
+	} catch (error) {
+		console.error("Error incrementing generated count:", error);
+		return {
+			success: false,
+			error: "Failed to increment generated count.",
+		};
+	}
 });

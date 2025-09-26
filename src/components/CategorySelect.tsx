@@ -26,27 +26,39 @@ export function CategorySelect({
 	onChangeSubcategory: (value: string) => void;
 }) {
 	return (
-		<div className={"flex flex-col gap-2"}>
+		<div className="flex flex-col gap-2">
 			<Label>
 				Category<span className="text-red-500">*</span>
 			</Label>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="outline" className="w-full justify-between">
-						{category
-							? `${category}${subcategory ? ` / ${subcategory}` : ""}`
-							: "Select a category"}
-						<ChevronDown className="ml-2 h-4 w-4" />
+					<Button
+						variant="outline"
+						className="w-full justify-between text-sm sm:text-base max-w-full"
+					>
+						<span className="truncate flex-1 text-left">
+							{category
+								? subcategory
+									? `${category}/${subcategory}`
+									: category
+								: "Select category"}
+						</span>
+						<ChevronDown className="ml-1 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="w-64">
+				<DropdownMenuContent
+					className="w-56 sm:w-64 max-w-[calc(100vw-2rem)]"
+					align="start"
+					side="bottom"
+				>
 					{categories.map((cat) => (
 						<DropdownMenuSub key={cat.name}>
-							<DropdownMenuSubTrigger>
-								<span className="flex-1 text-left">{cat.name}</span>
+							<DropdownMenuSubTrigger className="text-sm">
+								<span className="truncate">{cat.name}</span>
 							</DropdownMenuSubTrigger>
-							<DropdownMenuSubContent>
+							<DropdownMenuSubContent className="w-48 sm:w-56 max-w-[calc(100vw-4rem)]">
 								<DropdownMenuItem
+									className="text-sm"
 									onClick={() => {
 										onChangeCategory(cat.name);
 										onChangeSubcategory("");
@@ -57,6 +69,7 @@ export function CategorySelect({
 								{cat.subcategories.map((sub) => (
 									<DropdownMenuItem
 										key={sub}
+										className="text-sm truncate"
 										onClick={() => {
 											onChangeCategory(cat.name);
 											onChangeSubcategory(sub);

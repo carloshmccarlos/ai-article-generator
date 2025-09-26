@@ -77,8 +77,8 @@ function ArticleGenerator() {
 
     return (
         <>
-            <div className="flex flex-col gap-8 w-full  min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-                <div className="max-w-7xl mx-auto ">
+            <div className="flex flex-col gap-8  min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+                <div className="max-w-7xl mx-auto w-full">
                     <TitlePart/>
 
                     <div className=" grid gap-8 lg:grid-cols-1">
